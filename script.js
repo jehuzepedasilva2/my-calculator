@@ -1,3 +1,6 @@
+// TODO: When user enters "=" before all numbers are inputted
+// TODO: Continuously clicking the operator if only one number was entered should not crash calc 
+
 let displayed = "";
 let firstNumber = null;
 let secondNumber = null;
