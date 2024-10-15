@@ -1,5 +1,4 @@
-// TODO: Continuously clicking the operator if only one number was entered should not crash calc 
-
+// TODO: Continuously clicking the operator if only one number was entered should just add/sub/mult/div that number to itself (i.e 2 -> + -> + = 4 -> + = 8 ) 
 let displayed = "";
 let firstNumber = null;
 let secondNumber = null;
@@ -46,24 +45,29 @@ const addNumberedButtons = (start, stop) => {
         displayed = "";
         secondNumber = ":)";
       }
-      displayed += numberButtons.textContent;
-      updateDisplay(displayed);
+      if (displayed.length < 8) {
+        displayed += numberButtons.textContent;
+        updateDisplay(displayed);
+      }
     })
     buttonsContainer.appendChild(numberButtons);
   }
 }
 
 function updateDisplay(text) {
-  displayed = displayed.replace(/^0+/, '');
-  if (displayed.length <= 8) {
-    display.textContent = text;
+  text = String(text);
+  let i = 0;
+  while (i < text.length-1 && text[i] === "0") {
+    i += 1;
   }
+  text = text.substring(i);
+  display.textContent = text;
 }
 
 function equals() {
   if (firstNumber === null || secondNumber === null) {
     return;
-  }
+  } 
   secondNumber = displayed;
   displayed = "";
   let result = operate(firstNumber, secondNumber, operator);
@@ -109,7 +113,7 @@ const signButton = document.createElement("button");
 signButton.textContent = "+/-";
 signButton.classList.add("btn", "top-buttons");
 signButton.addEventListener("click", () => {
-  if (displayed != null || displayed !== "0") {
+  if (displayed !== null || displayed !== "0") {
     displayed = "-" + displayed;
     updateDisplay(displayed);
   }
