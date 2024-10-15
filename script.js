@@ -26,7 +26,7 @@ function mod(a, b) {
 function operate(a, b, operator) {
   const ops = {"+": add, "-": subtract, "*": multiply, "/": divide, "%": mod};
   if (b === "0" && operator === "/") {
-    return "lmao";
+    return "lmfao";
   }
   if (a.includes(".") || b.includes(".")) {
     return ops[operator](parseFloat(a), parseFloat(b))
@@ -52,6 +52,7 @@ const addNumberedButtons = (start, stop) => {
 }
 
 function updateDisplay(text) {
+  displayed = displayed.replace(/^0+/, '');
   if (displayed.length <= 8) {
     display.textContent = text;
   }
@@ -61,7 +62,7 @@ function equals() {
   secondNumber = displayed;
   displayed = "";
   let result = operate(firstNumber, secondNumber, operator);
-  if (result !== "lmao") {
+  if (result !== "lmfao") {
     result = Math.round(result * 1e7) / 1e7;
   }
   firstNumber = null;
@@ -102,6 +103,12 @@ buttonsContainer.appendChild(clearButton);
 const signButton = document.createElement("button");
 signButton.textContent = "+/-";
 signButton.classList.add("btn", "top-buttons");
+signButton.addEventListener("click", () => {
+  if (displayed != null || displayed !== "0") {
+    displayed = "-" + displayed;
+    updateDisplay(displayed);
+  }
+});
 buttonsContainer.appendChild(signButton);
 
 const modButton = document.createElement("button");
