@@ -55,12 +55,20 @@ const addNumberedButtons = (start, stop) => {
 }
 
 function updateDisplay(text) {
-  text = String(text);
   let i = 0;
+  let isSign = false;
+  if (text.length >= 1 && text[0] === "-") {
+    isSign = true;
+    i += 1;
+  }
+  text = String(text);
   while (i < text.length-1 && text[i] === "0") {
     i += 1;
   }
   text = text.substring(i);
+  if (isSign) {
+    text = "-" + text;
+  }
   display.textContent = text;
 }
 
@@ -77,6 +85,8 @@ function equals() {
   firstNumber = null;
   secondNumber = null;
   operator = null;
+  opPressed = 0;
+  displayed = String(result);
   updateDisplay(result);
   return result;
 }
@@ -104,6 +114,7 @@ clearButton.addEventListener("click", () => {
   firstNumber = null;
   secondNumber = null;
   operator = null;
+  opPressed = 0
   displayed = "";
   updateDisplay("0");
 })
@@ -113,7 +124,7 @@ const signButton = document.createElement("button");
 signButton.textContent = "+/-";
 signButton.classList.add("btn", "top-buttons");
 signButton.addEventListener("click", () => {
-  if (displayed !== null || displayed !== "0") {
+  if (displayed !== "0" && !displayed.includes("-")) {
     displayed = "-" + displayed;
     updateDisplay(displayed);
   }
