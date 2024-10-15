@@ -1,7 +1,7 @@
 let displayed = "";
-let operator;
-let firstNumber = "";
-let secondNumber = "";
+let firstNumber = null;
+let secondNumber = null;
+let operator = null;
 
 function add(a, b) {
   return a + b;
@@ -21,6 +21,9 @@ function divide(a, b) {
 
 function operate(a, b, operator) {
   const ops = {"+": add, "-": subtract, "*": multiply, "/": divide};
+  if (b === 0 && operate === "/") {
+    return "lmao";
+  }
   return ops[operator](parseInt(a), parseInt(b));
 }
 
@@ -30,20 +33,39 @@ const addNumberedButtons = (start, stop) => {
     numberButtons.textContent = `${i}`;
     numberButtons.classList.add("btn", "number-buttons");
     numberButtons.addEventListener("click", () => {
-      if (firstNumber !== "") {
+      if (firstNumber !== null) {
         displayed = "";
       }
-      if (displayed.length < 8) {
-        displayed = displayed + numberButtons.textContent;
-        updateDisplay(displayed);
-      }
+      displayed += numberButtons.textContent;
+      updateDisplay(displayed);
     })
     buttonsContainer.appendChild(numberButtons);
   }
 }
 
 function updateDisplay(text) {
-  display.textContent = text;
+  if (displayed.length <= 8) {
+    display.textContent = text;
+  }
+}
+
+function equals() {
+  secondNumber = displayed;
+  displayed = "";
+  let result = operate(firstNumber, secondNumber, operator);
+  firstNumber = null;
+  secondNumber = null;
+  operator = null;
+  updateDisplay(result);
+  return result;
+}
+
+function evaluate() {
+  if (firstNumber !== null) {
+    firstNumber = String(equals());
+  } else {
+    firstNumber = displayed;
+  }
 }
 
 const displayContainer = document.querySelector(".display-container");
@@ -58,6 +80,9 @@ const clearButton = document.createElement("button");
 clearButton.textContent = "AC";
 clearButton.classList.add("btn", "top-buttons");
 clearButton.addEventListener("click", () => {
+  firstNumber = null;
+  secondNumber = null;
+  operator = null;
   displayed = "";
   updateDisplay("0");
 })
@@ -77,8 +102,6 @@ const divideButton = document.createElement("button");
 divideButton.textContent = "÷";
 divideButton.classList.add("btn", "operation-buttons");
 divideButton.addEventListener("click", () => {
-  firstNumber = displayed;
-  operator = "/";
 })
 buttonsContainer.appendChild(divideButton);
 
@@ -88,8 +111,6 @@ const multiplyButton = document.createElement("button");
 multiplyButton.textContent = "×";
 multiplyButton.classList.add("btn", "operation-buttons");
 multiplyButton.addEventListener("click", () => {
-  firstNumber = displayed;
-  operator = "*";
 });
 buttonsContainer.appendChild(multiplyButton);
 
@@ -99,8 +120,8 @@ const subtractButton = document.createElement("button");
 subtractButton.textContent = "-";
 subtractButton.classList.add("btn", "operation-buttons");
 subtractButton.addEventListener("click", () => {
-  firstNumber = displayed;
-  operator = "-";
+  evaluate();
+  operator = subtractButton.textContent;
 });
 buttonsContainer.appendChild(subtractButton);
 
@@ -110,8 +131,8 @@ const addButton = document.createElement("button");
 addButton.textContent = "+";
 addButton.classList.add("btn", "operation-buttons");
 addButton.addEventListener("click", () => {
-  firstNumber = displayed;
-  operator = "+";
+  evaluate();
+  operator = addButton.textContent;
 })
 buttonsContainer.appendChild(addButton);
 
@@ -130,8 +151,6 @@ const equalsButton = document.createElement("button");
 equalsButton.textContent = "=";
 equalsButton.classList.add("btn", "operation-buttons");
 equalsButton.addEventListener("click", () => {
-  secondNumber = displayed
-  const result = operate(parseInt(firstNumber), parseInt(secondNumber), operator);
-  updateDisplay(result);
+  equals();
 });
 buttonsContainer.appendChild(equalsButton);
