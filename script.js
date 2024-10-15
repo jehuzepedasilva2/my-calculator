@@ -19,10 +19,17 @@ function divide(a, b) {
   return a / b;
 }
 
+function mod(a, b) {
+  return a % b;
+}
+
 function operate(a, b, operator) {
-  const ops = {"+": add, "-": subtract, "*": multiply, "/": divide};
-  if (b === 0 && operate === "/") {
+  const ops = {"+": add, "-": subtract, "*": multiply, "/": divide, "%": mod};
+  if (b === "0" && operator === "/") {
     return "lmao";
+  }
+  if (a.includes(".") || b.includes(".")) {
+    return ops[operator](parseFloat(a), parseFloat(b))
   }
   return ops[operator](parseInt(a), parseInt(b));
 }
@@ -33,8 +40,9 @@ const addNumberedButtons = (start, stop) => {
     numberButtons.textContent = `${i}`;
     numberButtons.classList.add("btn", "number-buttons");
     numberButtons.addEventListener("click", () => {
-      if (firstNumber !== null) {
+      if (firstNumber !== null && secondNumber === null) {
         displayed = "";
+        secondNumber = ":)";
       }
       displayed += numberButtons.textContent;
       updateDisplay(displayed);
@@ -53,6 +61,9 @@ function equals() {
   secondNumber = displayed;
   displayed = "";
   let result = operate(firstNumber, secondNumber, operator);
+  if (result !== "lmao") {
+    result = Math.round(result * 1e7) / 1e7;
+  }
   firstNumber = null;
   secondNumber = null;
   operator = null;
@@ -93,15 +104,21 @@ signButton.textContent = "+/-";
 signButton.classList.add("btn", "top-buttons");
 buttonsContainer.appendChild(signButton);
 
-const percentButton = document.createElement("button");
-percentButton.textContent = "%";
-percentButton.classList.add("btn", "top-buttons");
-buttonsContainer.appendChild(percentButton);
+const modButton = document.createElement("button");
+modButton.textContent = "%";
+modButton.classList.add("btn", "top-buttons");
+modButton.addEventListener("click", () => {
+  evaluate();
+  operator = "%";
+});
+buttonsContainer.appendChild(modButton);
 
 const divideButton = document.createElement("button");
 divideButton.textContent = "÷";
 divideButton.classList.add("btn", "operation-buttons");
 divideButton.addEventListener("click", () => {
+  evaluate();
+  operator = "/";
 })
 buttonsContainer.appendChild(divideButton);
 
@@ -111,6 +128,8 @@ const multiplyButton = document.createElement("button");
 multiplyButton.textContent = "×";
 multiplyButton.classList.add("btn", "operation-buttons");
 multiplyButton.addEventListener("click", () => {
+  evaluate();
+  operator = "*";
 });
 buttonsContainer.appendChild(multiplyButton);
 
@@ -145,6 +164,10 @@ addNumberedButtons(0, 0);
 const decimalButton = document.createElement("button");
 decimalButton.textContent = ".";
 decimalButton.classList.add("btn", "number-buttons");
+decimalButton.addEventListener("click", () => {
+  displayed += ".";
+  updateDisplay(displayed);
+})
 buttonsContainer.appendChild(decimalButton);
 
 const equalsButton = document.createElement("button");
