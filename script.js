@@ -1,4 +1,3 @@
-// TODO: When user enters "=" before all numbers are inputted
 // TODO: Continuously clicking the operator if only one number was entered should not crash calc 
 
 let displayed = "";
@@ -62,6 +61,9 @@ function updateDisplay(text) {
 }
 
 function equals() {
+  if (firstNumber === null || secondNumber === null) {
+    return;
+  }
   secondNumber = displayed;
   displayed = "";
   let result = operate(firstNumber, secondNumber, operator);
