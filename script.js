@@ -1,5 +1,6 @@
 // TODO: When user enters "=" before all numbers are inputted
 // TODO: Continuously clicking the operator if only one number was entered should not crash calc 
+// TODO: Disable decimal button if there is already one on the display
 
 let displayed = "";
 let firstNumber = null;
@@ -175,8 +176,10 @@ const decimalButton = document.createElement("button");
 decimalButton.textContent = ".";
 decimalButton.classList.add("btn", "number-buttons");
 decimalButton.addEventListener("click", () => {
-  displayed += ".";
-  updateDisplay(displayed);
+  if (!displayed.includes(".")) {
+    displayed += ".";
+    updateDisplay(displayed);
+  }
 })
 buttonsContainer.appendChild(decimalButton);
 
