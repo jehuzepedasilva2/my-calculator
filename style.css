@@ -12,6 +12,8 @@ body {
   height: 600px;
   width: 400px;
   margin: 0 auto;
+  border: 2px solid white;
+  border-radius: 10px;
 }
 
 .display-container {
